@@ -8,6 +8,7 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
+  GraphQLBoolean,
 } = graphql;
 
 const Movies = require('../models/movie');
@@ -19,6 +20,8 @@ const MovieType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
     genre: { type: new GraphQLNonNull(GraphQLString) },
+    rate: { type: GraphQLInt },
+    watched: { type: new GraphQLNonNull(GraphQLBoolean) },
     director: {
       type: DirectorType,
       resolve(parent, args) {
@@ -66,12 +69,16 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         genre: { type: new GraphQLNonNull(GraphQLString) },
         directorId: { type: GraphQLID },
+        rate: { type: GraphQLInt },
+        watched: { type: new GraphQLNonNull(GraphQLBoolean) },
       },
-      resolve(parent, { name, genre, directorId }) {
+      resolve(parent, { name, genre, directorId, rate, watched }) {
         const movie = new Movies({
           name,
           genre,
           directorId,
+          rate,
+          watched,
         });
         return movie.save();
       },
@@ -112,12 +119,14 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         genre: { type: new GraphQLNonNull(GraphQLString) },
         directorId: { type: GraphQLID },
+        rate: { type: GraphQLInt },
+        watched: { type: new GraphQLNonNull(GraphQLBoolean) },
       },
-      resolve(parent, { id, name, genre, directorId }) {
+      resolve(parent, { id, name, genre, directorId, rate, watched }) {
         return Movies.findByIdAndUpdate(
           id,
-          { $set: { name, genre, directorId } },
-          { new: true }
+          { $set: { name, genre, directorId, rate, watched } },
+          { new: true },
         );
       },
     },
