@@ -29,5 +29,5 @@ dbConnection.on('open', (err) =>
 );
 
 app.listen(PORT, (err) => {
-  err ? console.log(error) : console.log('Server has started');
+  err ? console.log(err) : console.log('Server has started');
 });
